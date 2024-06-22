@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "98008969268",
+    "firebase_url": "https://gemy-78e67-default-rtdb.firebaseio.com",
+    "project_id": "gemy-78e67",
+    "storage_bucket": "gemy-78e67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98008969268:android:438aeabfed491492985a61",
+        "android_client_info": {
+          "package_name": "gemy.android.gemy_v1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClZ4HXRm80juHiAKi0A6ruHw4XR-5jP_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
