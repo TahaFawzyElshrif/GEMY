@@ -1,8 +1,12 @@
 package gemy.android.gemy_v1;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -12,9 +16,9 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 public class MqttHandler {
 
     private MqttClient client;
+    public  String new_message;
 
     public void connect(String brokerUrl, String clientId) {
-
         try {
             // Set up the persistence layer
             MemoryPersistence persistence = new MemoryPersistence();
@@ -29,7 +33,24 @@ public class MqttHandler {
 
             // Connect to the broker
             client.connect(connectOptions);
+            client.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable cause) {
+                    Log.e("TAG", "Connection lost: " + cause.getMessage());
+                }
 
+                @Override
+                public void messageArrived(String topic, MqttMessage message) {
+                    Log.d("TAG", "Message arrived. Topic: " + topic + " Message: " + new String(message.getPayload()));
+                    new_message=new String(message.getPayload());
+
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                    Log.d("TAG", "Delivery complete");
+                }
+            });
         } catch (MqttException e) {
             Log.e("----------------->",e.toString());
         }

@@ -54,13 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-        //mqttManager=new MqttHandler();
-        //mqttManager.connect(serverUri , clientId);
-        //mqttManager.subscribe(messagesTopic);
-        //Utils.loadSharedPrefrence(MainActivity.this);
+
+        Utils.loadSharedPrefrence(MainActivity.this);
         animLogo();
         goNextActivity();
-
 
 
     }
@@ -71,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //if (Utils.is_first_time) {
-                //    Utils.goToActivity(MainActivity.this,Guide1.class);
-               // }else
+                if (Utils.is_first_time) {
+                    Utils.goToActivity(MainActivity.this,Guide1.class);
+                }else
                 {
                     Utils.goToActivity(MainActivity.this,Menu.class);
                 }

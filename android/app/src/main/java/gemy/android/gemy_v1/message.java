@@ -16,6 +16,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
@@ -38,12 +44,31 @@ public class message extends AppCompatActivity {
         });
         record=findViewById(R.id.record);
         send=findViewById(R.id.send);
+        send.setEnabled(true);
         text=findViewById(R.id.text);
         setMicToListen();
         setSendMessage();
+        //setStopOnRecord();
+    }
+
+    private void setStopOnRecord() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef2 =  database.getReference(Utils.user_name).child("record");
+        myRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean recording=dataSnapshot.getValue(Boolean.class);
+                send.setEnabled(recording);//just send message when state is recording
+                send.setText(recording?"Send the message":"wait until response");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {}
+        });
     }
 
     private void setSendMessage() {
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,6 +76,9 @@ public class message extends AppCompatActivity {
                 mqttManager.connect(Utils.serverUri , Utils.clientId);
                 mqttManager.subscribe(Utils.messagesTopic);
                 mqttManager.publish(Utils.messagesTopic,text.getText().toString());
+                //FirebaseDatabase database = FirebaseDatabase.getInstance();
+                //DatabaseReference langRef = database.getReference(Utils.user_name).child("record");
+                //langRef.setValue(false);
 
             }
         });
@@ -84,7 +112,6 @@ public class message extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 text.setText(Objects.requireNonNull(result).get(0));
-                //mqttManager.publish(messagesTopic,Objects.requireNonNull(result).get(0));
 
             }
         }

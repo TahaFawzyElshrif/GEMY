@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class NewUser extends AppCompatActivity {
     EditText name, password;
-    Button create;
+    Button create,login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +33,18 @@ public class NewUser extends AppCompatActivity {
             return insets;
         });
         create = findViewById(R.id.create);
+        login = findViewById(R.id.login);
+
         name = findViewById(R.id.username);
         password = findViewById(R.id.password);
 
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.goToActivity(NewUser.this, Login.class);
+
+            }
+        });
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,9 +60,15 @@ public class NewUser extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Utils.showDialog(NewUser.this, "User Created");
-                                        Utils.setEmailPassword(NewUser.this,name.getText().toString(),password.getText().toString(),email);
-                                        Utils.goToActivity(NewUser.this,Finish_Setup.class);
+                                        try {
+                                            Utils.showDialog(NewUser.this, "User Created");
+                                            Utils.setEmailPassword(NewUser.this, name.getText().toString(), password.getText().toString(), email);
+                                            Utils.authenticateAccount(NewUser.this,Utils.email,Utils.user_password);//must be after setEmailPassword
+                                            Utils.createDefaultKeys();
+                                            Utils.goToActivity(NewUser.this, Finish_Setup.class);
+                                        }catch (Exception ex){
+                                            Utils.showDialog(NewUser.this, "Can not create ,try again"+ex.toString());
+                                        }
                                     } else {
                                         Utils.showDialog(NewUser.this, "Can not create ,try again ,you may use weak password ?");
 
