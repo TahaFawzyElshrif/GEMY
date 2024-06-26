@@ -22,15 +22,17 @@ def helloServo():
     time.sleep(.25)
 def set_servo_angle_optimized(fro,to,delay):
     if (fro<to):
-        for i in range (fro,to,5):
+        for i in range (fro,to,10):
             set_servo_angle(i)
             time.sleep(delay)
     else:
-        for i in range (fro,to,-5):
+        for i in range (fro,to,-10):
             set_servo_angle(i)
             time.sleep(delay)
             
 def optimized_helloServo():
+    
+    for i in range(2):
         delay=.3      
         set_servo_angle(0)
         time.sleep(delay)
@@ -48,3 +50,11 @@ def optimized_helloServo():
         time.sleep(delay)
         set_servo_angle(0)
         time.sleep(delay)
+    
+    #set_servo_angle_optimized(0,90,.5)
+
+#while True :
+#    print("start")
+#    optimized_helloServo()
+#    print("end")
+#    time.sleep(2)

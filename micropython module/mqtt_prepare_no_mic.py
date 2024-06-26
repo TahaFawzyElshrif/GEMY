@@ -4,18 +4,15 @@ from umqtt.simple import MQTTClient
 import ubinascii
 import machine
 from machine import Pin, PWM , TouchPad ,I2C
-from utils import *
-from lcd_eye import *
-from firebase import *
-
-mic_pin = machine.ADC(machine.Pin(32))
-
-
-#mic_pin = Pin(34) ,----> 34 not PWM
-#mic_pin = PWM(mic_pin)
-
-ssid = 'ABCD'#'V2024'
-password = '1000##30'
+from utils import connect_wifi_input_keypad ,repeated_hello_firebase,connect_firebase_input_keypad_store,playing_led_pin
+from lcd_eye import blink_eyes_one_time,prepareLcd,lcd
+from firebase import send_data_firebaseAuth,get_data_firebaseAuth
+from speaker import default_Mute
+from nvs_store import getStringStore,storeStringStore
+import urequests
+import ujson #to prevent some errors from firebase
+import _thread
+import gc
 
 # MQTT server details
 mqtt_server = 'test.mosquitto.org'
@@ -66,31 +63,40 @@ def mqtt_reconnect(client):
 # Setup
 def setup():
     global auth_token
+    default_Mute()
     prepareLcd()
-    blink_eyes_one_time() #starting ,wait question
     connect_wifi_input_keypad()#connect_wifi(ssid,password)
-    auth_token = connect_firebase_input_keypad()
+    auth_token = connect_firebase_input_keypad_store()
+    blink_eyes_one_time() #starting ,wait question
     client = MQTTClient(client_id, mqtt_server, port=mqtt_port)
     client.set_callback(mqtt_callback)
-    mqtt_reconnect(client)   
+    mqtt_reconnect(client)
+    storeStringStore("auth_token",auth_token)
+    del(auth_token)
     return client
 
+'''
 def execute_stop_recording():
     global isrecording
     if (isrecording):#isrecording condition to make code done just one time
          print("Touched! ,recording stopped ,waiting server answer")
          client.publish(request_topic, f"stop")
          isrecording=False
-         
+'''        
 
     
       
 def loop(client):
     global received_message
     global isrecording
+    #global auth_token
+
+    
     
     while True:
-        #hello_condition()
+        #if client.
+        #mqtt_reconnect(client)
+
         try:
                 ''' ##the commented stuff is for microphone
                 #print("check_touched(touch_pin)")
@@ -124,7 +130,10 @@ def loop(client):
                         print("sound stopped,recording started")
                         blink_eyes_one_time()
                         #isrecording=True
-                        pass
+                        #gc.collect()
+                        #send_data_firebaseAuth(getStringStore("USER_NAME")+"/record",True, getStringStore ("auth_token"))
+                        #gc.collect()
+                                            
                     else:
                         '''
                         #print("before : "+str(received_message))
@@ -148,7 +157,25 @@ def loop(client):
         except OSError as e:
             print('Connection lost. Reconnecting...')
             mqtt_reconnect(client)
+        except Exception:
+            pass
 
-  
 client = setup()
+
+##this part clean garbage after each time to make code work due to limit memory
+gc.collect()
+#send_data_firebaseAuth(getStringStore("USER_NAME")+"/error","Started", getStringStore ("auth_token"))
+gc.collect()
+hello_cond=True#get_data_firebaseAuth(getStringStore("USER_NAME")+"/helloCond",   getStringStore ("auth_token"))
+gc.collect()
+speaker_cond=True#get_data_firebaseAuth(getStringStore("USER_NAME")+"/speakerCond", getStringStore ("auth_token"))
+gc.collect()
+_thread.start_new_thread(repeated_hello_firebase, (hello_cond,speaker_cond))
+client.publish(request_topic, f"Hello")
+
+
+
 loop(client)
+
+
+
