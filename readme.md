@@ -2,7 +2,7 @@
 
 ## What is it
 Gemy is simple Maquette simulate a robot that implements Google gemini API to fetch results
-
+![alt text](files/the%20robot%20snap.JPG)
 
 ## Semantices
 ![alt text](files/image.png)
@@ -40,8 +40,18 @@ Lcd_eye : make eye by using custom char of eye ,consist of 6 consequence chars
 - app settings not applied due to memory full 
 
 
+
+## Full documentation :
+[Documentation](files/report_project.docx)
+
+
+## Demo :
+https://drive.google.com/file/d/1OoTq3I9fxtxAOTANQALYn_WZHaztmRLm/view?usp=drive_link 
+https://drive.google.com/file/d/16m1N2Ex4vi4AC1swpYj8I6dGdjysm521/view?usp=drive_link 
+https://drive.google.com/file/d/1qvsTQOxUyhHvkRBUiXIPEyWHKeiiNKcG/view?usp=drive_link 
+
 ## Me tahaelshrif1@gmail.com with the team :
 •	Mazen ElSayed  , Omar mohab ,Omar Essam
 
 
-thanks to eng mohammed hatem 
+Thanks to Eng.Mohammed Hatem 
