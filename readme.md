@@ -4,8 +4,7 @@
 Gemy is simple Maquette simulate a robot that implements Google gemini API to fetch results
 ![alt text](files/the%20robot%20snap.JPG)
 
-## Semantices
-![alt text](files/image.png)
+
 
 ## abstract of how it works 
 -In order to implement the chat ,we need to call the gemini API to send and receive message.
